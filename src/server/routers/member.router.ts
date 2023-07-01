@@ -23,19 +23,19 @@ export const memberRouter = router({
 			})
 		)
 		.mutation(async ({ input }) => {
-			const member = await prisma.member.create({
-				data: {
-					name: input.name,
-					birthday: new Date(input.birthday),
-					address: input.address,
-					zip: input.zip,
-					city: input.city,
-					email: input.email,
-					phone: input.phone,
-					bank: input.bank,
-					amount: input.amount
-				}
-			});
+			// const member = await prisma.member.create({
+			// 	data: {
+			// 		name: input.name,
+			// 		birthday: new Date(input.birthday),
+			// 		address: input.address,
+			// 		zip: input.zip,
+			// 		city: input.city,
+			// 		email: input.email,
+			// 		phone: input.phone,
+			// 		bank: input.bank,
+			// 		amount: input.amount
+			// 	}
+			// });
 
 			const transporter = nodemailer.createTransport({
 				host: 'smtp.office365.com',
@@ -73,6 +73,6 @@ export const memberRouter = router({
 				`
 			});
 
-			return member;
+			// return member;
 		})
 });
