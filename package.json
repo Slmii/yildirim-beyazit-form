@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"postinstall": "prisma generate",
 		"format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\" --ignore-path .prettierignore"
 	},
 	"dependencies": {
@@ -27,7 +28,6 @@
 		"@types/react": "18.2.14",
 		"@types/react-dom": "18.2.6",
 		"date-fns": "^2.30.0",
-		"eslint": "8.44.0",
 		"eslint-config-next": "13.4.7",
 		"i18next": "^23.2.6",
 		"i18next-browser-languagedetector": "^7.1.0",
@@ -50,6 +50,12 @@
 		"@types/iban": "^0.0.32",
 		"@types/nodemailer": "^6.4.8",
 		"@types/stylis": "^4.2.0",
+		"@typescript-eslint/eslint-plugin": "^5.60.1",
+		"@typescript-eslint/parser": "^5.60.1",
+		"eslint": "^8.44.0",
+		"eslint-plugin-react": "^7.32.2",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-react-refresh": "^0.4.1",
 		"prisma": "^4.16.2"
 	}
 }
