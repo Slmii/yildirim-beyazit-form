@@ -39,6 +39,7 @@ export const Button = ({
 			{loading ? (
 				<CircularProgress
 					color="inherit"
+					size={20}
 					sx={{
 						marginRight: 2
 					}}

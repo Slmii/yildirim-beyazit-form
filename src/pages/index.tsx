@@ -9,15 +9,18 @@ import { Button } from 'components/Button';
 import Image from 'next/image';
 import { LanguageSwitcher } from 'components/LanguageSwitcher/LanguageSwitcher.component';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
-
 import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import { schema } from 'lib/form.schema';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { nlNL as coreNlNL } from '@mui/material/locale';
+import { nlNL } from '@mui/x-date-pickers/locales';
 
 interface IFormValues {
 	name: string;
@@ -33,6 +36,8 @@ interface IFormValues {
 
 export default function Home() {
 	const { t, i18n } = useTranslation();
+	const [loading, setLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
 		if (i18n.language === 'ar') {
@@ -43,9 +48,15 @@ export default function Home() {
 	}, [i18n.language]);
 
 	const theme = useMemo(() => {
-		return createTheme({
-			direction: i18n.language === 'ar' ? 'rtl' : 'ltr'
-		});
+		return createTheme(
+			{
+				direction: i18n.language === 'ar' ? 'rtl' : 'ltr'
+			},
+			{
+				nlNL, // x-date-pickers translations
+				coreNlNL // core translations
+			}
+		);
 	}, [i18n.language]);
 
 	const rtlCache = useMemo(() => {
@@ -60,18 +71,24 @@ export default function Home() {
 		});
 	}, [i18n.language]);
 
-	const handleOnFormSubmit = async (values: IFormValues) => {
-		const response = await fetch('/api/form', {
-			method: 'POST',
-			body: JSON.stringify(values),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
+	const handleOnFormSubmit = async (values: IFormValues, reset: () => void) => {
+		setLoading(true);
 
-		if (response.ok) {
-			const data = await response.json();
-			console.log(data);
+		try {
+			// await fetch('/api/form', {
+			// 	method: 'POST',
+			// 	body: JSON.stringify(values),
+			// 	headers: {
+			// 		'Content-Type': 'application/json'
+			// 	}
+			// });
+
+			reset();
+			setSuccess(true);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -111,7 +128,7 @@ export default function Home() {
 							</Stack>
 							<LanguageSwitcher />
 							<Form<IFormValues>
-								action={handleOnFormSubmit}
+								action={reset => data => handleOnFormSubmit(data, reset)}
 								defaultValues={{
 									name: '',
 									birthday: null,
@@ -182,12 +199,36 @@ export default function Home() {
 												})}
 											</Typography>
 										</div>
-										<Button variant="contained" size="large" type="submit">
+										<Button loading={loading} variant="contained" size="large" type="submit">
 											{t('form.submit')}
 										</Button>
 									</>
 								)}
 							/>
+							<Snackbar
+								open={success}
+								autoHideDuration={5000}
+								onClose={() => setSuccess(false)}
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'right'
+								}}
+							>
+								<Alert
+									onClose={() => setSuccess(false)}
+									severity="success"
+									sx={{
+										display: 'flex',
+										alignItems: 'center',
+										minWidth: '100%',
+										height: 50,
+										fontSize: 16,
+										border: theme => `1px solid ${theme.palette.success.dark}`
+									}}
+								>
+									{t('form.success')}
+								</Alert>
+							</Snackbar>
 						</Stack>
 					</Container>
 				</ThemeProvider>

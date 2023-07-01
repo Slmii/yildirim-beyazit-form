@@ -1,12 +1,12 @@
 import { ReactNode, Ref } from 'react';
-import { DefaultValues, FieldValues, Mode, SubmitHandler, UseFormReturn } from 'react-hook-form';
+import { DefaultValues, FieldValues, Mode, SubmitHandler, UseFormReset, UseFormReturn } from 'react-hook-form';
 import { AnyObjectSchema } from 'yup';
 
 export interface FormProps<T extends FieldValues> {
 	/**
 	 * Function to execute on form submit
 	 */
-	action: SubmitHandler<T>;
+	action: (reset: UseFormReset<T>) => SubmitHandler<T>;
 	/**
 	 * Validator schema. Either a joi or yup schema.
 	 */

@@ -3,6 +3,7 @@ import { DatePickerProps } from './DatePicker.types';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 import FormHelperText from '@mui/material/FormHelperText';
+import { useTranslation } from 'react-i18next';
 
 export const DatePicker = ({
 	name,
@@ -15,6 +16,7 @@ export const DatePicker = ({
 	disabled = false
 }: DatePickerProps) => {
 	const { control } = useFormContext();
+	const { i18n } = useTranslation();
 
 	return (
 		<Controller
@@ -33,7 +35,7 @@ export const DatePicker = ({
 					}}
 				>
 					<DateField
-						format="dd/MM/yyyy"
+						format={i18n.dir() === 'ltr' ? 'dd/MM/yyyy' : undefined}
 						value={field.value as Date}
 						onChange={date => {
 							field.onChange(date);

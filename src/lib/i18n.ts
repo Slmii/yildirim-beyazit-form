@@ -31,7 +31,8 @@ i18n
 						phone: 'Telefoonnummer',
 						bank: 'IBAN nummer',
 						amount: 'Maandelijkse contributie',
-						submit: 'Versturen'
+						submit: 'Versturen',
+						success: 'Bedankt voor uw aanmelding!'
 					},
 					agreement: {
 						title: 'Akkoordverklaring',
@@ -60,7 +61,8 @@ i18n
 						phone: 'Telefon Numarası',
 						bank: 'IBAN numarası',
 						amount: 'Aylık Aidat Miktarı',
-						submit: 'Gönder'
+						submit: 'Gönder',
+						success: 'Başvurunuz için teşekkür ederiz!'
 					},
 					agreement: {
 						title: 'Sözleşme',
@@ -89,7 +91,8 @@ i18n
 						phone: 'رقم الهاتف',
 						bank: 'رقم الحساب البنكي',
 						amount: 'مبلغ الاشتراك الشهري',
-						submit: 'إرسال'
+						submit: 'إرسال',
+						success: 'شكرا لتقديم طلبك!'
 					},
 					agreement: {
 						title: 'اتفاقية',

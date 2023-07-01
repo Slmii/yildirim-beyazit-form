@@ -20,7 +20,7 @@ export function Form<T extends FieldValues>({
 
 	return (
 		<FormProvider {...methods}>
-			<form onSubmit={methods.handleSubmit(action)} ref={myRef}>
+			<form onSubmit={methods.handleSubmit(action(methods.reset))} ref={myRef}>
 				<FormGroup
 					sx={{
 						'& > *:not(:last-child)': {
