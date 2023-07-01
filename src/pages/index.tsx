@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { LanguageSwitcher } from 'components/LanguageSwitcher/LanguageSwitcher.component';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo, useState } from 'react';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
@@ -21,6 +21,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { nlNL as coreNlNL } from '@mui/material/locale';
 import { nlNL } from '@mui/x-date-pickers/locales';
+import { useDevice } from 'lib/hooks/useDevice';
 
 interface IFormValues {
 	name: string;
@@ -35,6 +36,7 @@ interface IFormValues {
 }
 
 export default function Home() {
+	const { isMobile } = useDevice();
 	const { t, i18n } = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
@@ -48,7 +50,7 @@ export default function Home() {
 	}, [i18n.language]);
 
 	const theme = useMemo(() => {
-		return createTheme(
+		let theme = createTheme(
 			{
 				direction: i18n.language === 'ar' ? 'rtl' : 'ltr'
 			},
@@ -57,6 +59,10 @@ export default function Home() {
 				coreNlNL // core translations
 			}
 		);
+
+		theme = responsiveFontSizes(theme);
+
+		return theme;
 	}, [i18n.language]);
 
 	const rtlCache = useMemo(() => {
@@ -110,7 +116,12 @@ export default function Home() {
 								py: 3
 							}}
 						>
-							<Stack direction="row" spacing={2} alignItems="center">
+							<Stack
+								direction={isMobile ? 'column' : 'row'}
+								spacing={2}
+								textAlign={isMobile ? 'center' : undefined}
+								alignItems="center"
+							>
 								<Image
 									alt="Logo"
 									src="https://diyanet.nl/wp-content/uploads/2017/09/Diyanet-Site-Logo.png"
@@ -118,7 +129,7 @@ export default function Home() {
 									height={100}
 								/>
 								<Stack direction="column">
-									<Typography variant="h4" component="h1">
+									<Typography variant="h4" flexWrap="wrap" component="h1">
 										{t('title')}
 									</Typography>
 									<Typography variant="h6" fontWeight="light" component="p">
