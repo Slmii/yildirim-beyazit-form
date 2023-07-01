@@ -2,7 +2,6 @@ import { procedure, router } from 'server/trpc';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
 import { prisma } from 'server/prisma';
-import { env } from 'server/env';
 
 export const memberRouter = router({
 	getAll: procedure.query(async () => {
@@ -40,8 +39,8 @@ export const memberRouter = router({
 			const transporter = nodemailer.createTransport({
 				host: 'smtp.office365.com',
 				auth: {
-					user: `${env.EMAIL_USERNAME}`,
-					pass: `${env.EMAIL_PASSWORD}`
+					user: `${process.env.EMAIL_USERNAME}`,
+					pass: `${process.env.EMAIL_PASSWORD}`
 				},
 				port: 587,
 				tls: {
@@ -51,8 +50,8 @@ export const memberRouter = router({
 			});
 
 			await transporter.sendMail({
-				from: `Yıldırım Beyazıt Cami <${env.EMAIL_USERNAME}>`,
-				to: `${env.EMAIL_USERNAME}`,
+				from: `Yıldırım Beyazıt Cami <${process.env.EMAIL_USERNAME}>`,
+				to: `${process.env.EMAIL_USERNAME}`,
 				subject: 'Yıldırım Beyazıt Cami Üyelik Başvuru Formu',
 				text: 'Yıldırım Beyazıt Cami Üyelik Başvuru Formu',
 				html: `
