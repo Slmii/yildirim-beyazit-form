@@ -1,8 +1,6 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import slugify from 'slugify';
 import { Label } from 'components/Form/Label';
