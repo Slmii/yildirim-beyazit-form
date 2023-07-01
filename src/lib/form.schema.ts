@@ -12,15 +12,13 @@ export const schema = (t: TFunction<'translation', undefined>) => {
 			zip: yup.string().required(t('schema.provideValue')),
 			city: yup.string().required(t('schema.provideValue')),
 			email: yup.string().required(t('schema.provideValue')).email(t('schema.provideValidEmail')),
-			bank: yup
-				.string()
-				.required(t('schema.provideValue'))
-				.test('is-iban', t('schema.provideValidIBAN'), value => {
-					return !!value && IBAN.isValid(value);
-				}),
+			bank: yup.string().required(t('schema.provideValue')),
+			// .test('is-iban', t('schema.provideValidIBAN'), value => {
+			// 	return !!value && IBAN.isValid(value);
+			// }),
 			amount: yup
 				.number()
-				.min(1, t('schema.minAmount', { amount: 1 }))
+				.min(5, t('schema.minAmount', { amount: 5 }))
 				.typeError(t('schema.provideValue'))
 		})
 		.required();

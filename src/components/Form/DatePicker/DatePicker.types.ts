@@ -3,8 +3,6 @@ export interface DatePickerProps {
 	label?: string;
 	required?: boolean;
 	disabled?: boolean;
-	minDate?: Date;
-	maxDate?: Date;
 	fullWidth?: boolean;
-	onChange?: (date: Date | null) => void;
+	onChange?: (date: string | null) => void;
 }

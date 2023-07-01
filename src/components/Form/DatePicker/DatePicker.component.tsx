@@ -9,9 +9,7 @@ export const DatePicker = ({
 	name,
 	label,
 	onChange,
-	minDate,
 	fullWidth,
-	maxDate,
 	required = false,
 	disabled = false
 }: DatePickerProps) => {
@@ -36,15 +34,13 @@ export const DatePicker = ({
 				>
 					<DateField
 						format={i18n.dir() === 'ltr' ? 'dd/MM/yyyy' : undefined}
-						value={field.value as Date}
+						value={field.value as string}
 						onChange={date => {
 							field.onChange(date);
 							onChange?.(date);
 						}}
 						disabled={disabled}
 						label={label}
-						maxDate={maxDate}
-						minDate={minDate}
 						slotProps={{
 							textField: {
 								name

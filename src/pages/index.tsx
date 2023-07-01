@@ -22,10 +22,11 @@ import Alert from '@mui/material/Alert';
 import { nlNL as coreNlNL } from '@mui/material/locale';
 import { nlNL } from '@mui/x-date-pickers/locales';
 import { useDevice } from 'lib/hooks/useDevice';
+import { trpc } from 'lib/utils/trpc';
 
 interface IFormValues {
 	name: string;
-	birthday: null | Date;
+	birthday: string;
 	address: string;
 	zip: string;
 	city: string;
@@ -36,10 +37,11 @@ interface IFormValues {
 }
 
 export default function Home() {
+	const [isSuccess, setIsSuccess] = useState(false);
+
 	const { isMobile } = useDevice();
 	const { t, i18n } = useTranslation();
-	const [loading, setLoading] = useState(false);
-	const [success, setSuccess] = useState(false);
+	const { mutateAsync, isLoading } = trpc.form.create.useMutation();
 
 	useEffect(() => {
 		if (i18n.language === 'ar') {
@@ -88,23 +90,13 @@ export default function Home() {
 	}, [i18n.language]);
 
 	const handleOnFormSubmit = async (values: IFormValues, reset: () => void) => {
-		setLoading(true);
-
 		try {
-			await fetch('/api/form', {
-				method: 'POST',
-				body: JSON.stringify(values),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+			await mutateAsync(values);
 
 			reset();
-			setSuccess(true);
+			setIsSuccess(true);
 		} catch (error) {
 			console.log(error);
-		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -152,7 +144,7 @@ export default function Home() {
 								action={reset => data => handleOnFormSubmit(data, reset)}
 								defaultValues={{
 									name: '',
-									birthday: null,
+									birthday: '',
 									address: '',
 									zip: '',
 									city: '',
@@ -220,23 +212,23 @@ export default function Home() {
 												})}
 											</Typography>
 										</div>
-										<Button loading={loading} variant="contained" size="large" type="submit">
+										<Button loading={isLoading} variant="contained" size="large" type="submit">
 											{t('form.submit')}
 										</Button>
 									</>
 								)}
 							/>
 							<Snackbar
-								open={success}
+								open={isSuccess}
 								autoHideDuration={5000}
-								onClose={() => setSuccess(false)}
+								onClose={() => setIsSuccess(false)}
 								anchorOrigin={{
 									vertical: 'top',
 									horizontal: 'right'
 								}}
 							>
 								<Alert
-									onClose={() => setSuccess(false)}
+									onClose={() => setIsSuccess(false)}
 									severity="success"
 									sx={{
 										display: 'flex',
