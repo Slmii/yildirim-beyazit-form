@@ -77,6 +77,16 @@ export default function Home() {
 		});
 	}, [i18n.language]);
 
+	const langToLocale = useMemo(() => {
+		if (i18n.language === 'ar') {
+			return 'ar-SA';
+		} else if (i18n.language === 'tr') {
+			return 'tr-TR';
+		} else {
+			return 'nl-NL';
+		}
+	}, [i18n.language]);
+
 	const handleOnFormSubmit = async (values: IFormValues, reset: () => void) => {
 		setLoading(true);
 
@@ -203,7 +213,7 @@ export default function Home() {
 												{t('date')}
 											</Typography>
 											<Typography variant="body2" fontWeight="light" component="p">
-												{new Date().toLocaleDateString('nl-NL', {
+												{new Date().toLocaleDateString(langToLocale, {
 													year: 'numeric',
 													month: 'long',
 													day: 'numeric'
