@@ -1,8 +1,8 @@
 import { router } from 'server/trpc';
-import { formRouter } from './form';
+import { memberRouter } from './member.router';
 
 export const appRouter = router({
-	form: formRouter
+	member: memberRouter
 });
 
 // export type definition of API
