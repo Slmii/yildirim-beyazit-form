@@ -166,14 +166,14 @@ export default function Home() {
 									<>
 										<Field required name="name" label={t('form.name')} />
 										<DatePicker required name="birthday" label={t('form.birthday')} />
-										<Stack direction="row" gap={2}>
+										<Stack direction={isMobile ? 'column' : 'row'} gap={2}>
 											<Field required fullWidth name="address" label={t('form.address')} />
 											<Field required fullWidth name="zip" label={t('form.zip')} />
 											<Field required fullWidth name="city" label={t('form.city')} />
 										</Stack>
 										<Field required name="email" label={t('form.email')} />
 										<TelField name="phone" label={t('form.phone')} />
-										<Stack direction="row" gap={2}>
+										<Stack direction={isMobile ? 'column' : 'row'} gap={2}>
 											<IBANInput
 												required
 												fullWidth
