@@ -9,8 +9,8 @@ const { z } = require('zod');
 /*eslint sort-keys: "error"*/
 const envSchema = z.object({
 	DATABASE_URL: z.string().url(),
-	EMAIL_USERNAME: z.string(),
 	EMAIL_PASSWORD: z.string(),
+	EMAIL_USERNAME: z.string(),
 	NODE_ENV: z.enum(['development', 'test', 'production'])
 });
 
