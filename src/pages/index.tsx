@@ -98,7 +98,7 @@ export default function Home() {
 				<title>{t('title')}</title>
 				<meta name="description" content={t('title')} />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" href="https://diyanet.nl/wp-content/uploads/2017/09/Diyanet-Site-Logo.png" />
 			</Head>
 			<CacheProvider value={rtlCache}>
 				<ThemeProvider theme={theme}>
