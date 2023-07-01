@@ -75,13 +75,13 @@ export default function Home() {
 		setLoading(true);
 
 		try {
-			// await fetch('/api/form', {
-			// 	method: 'POST',
-			// 	body: JSON.stringify(values),
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	}
-			// });
+			await fetch('/api/form', {
+				method: 'POST',
+				body: JSON.stringify(values),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
 
 			reset();
 			setSuccess(true);
