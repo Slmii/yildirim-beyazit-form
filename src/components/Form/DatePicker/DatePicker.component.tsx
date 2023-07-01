@@ -50,6 +50,12 @@ export const DatePicker = ({
 								name
 							}
 						}}
+						InputLabelProps={{
+							error: !!fieldState.error
+						}}
+						InputProps={{
+							error: !!fieldState.error
+						}}
 					/>
 					{fieldState.error && fieldState.error.message ? (
 						<FormHelperText error>{fieldState.error.message}</FormHelperText>
