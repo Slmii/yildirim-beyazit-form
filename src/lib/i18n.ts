@@ -36,7 +36,7 @@ i18n
 					},
 					agreement: {
 						title: 'Akkoordverklaring',
-						text: '{{name}} verleent hierbij tot wederopzegging machtiging aan ISN Yildirim Beyazit Moskee, gevestigd aan de Peyserhof 20 te Emmen om van zijn/haar bovenstande bankrekening maandelijks een bedrag van {{amount}} af te schrijven wegens contributie.'
+						text: '{{name}} verleent hierbij tot wederopzegging machtiging aan ISN Yildirim Beyazit Moskee, gevestigd aan de Peyserhof 20 te Emmen om van zijn/haar bovenstaande bankrekening maandelijks een bedrag van {{amount}} af te schrijven wegens contributie.'
 					},
 					date: 'Datum',
 					schema: {
