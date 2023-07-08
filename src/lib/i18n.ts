@@ -32,6 +32,7 @@ i18n
 						bank: 'IBAN nummer',
 						amount: 'Maandelijkse contributie',
 						submit: 'Versturen',
+						add: 'Toevoegen',
 						success: 'Bedankt voor uw aanmelding!'
 					},
 					agreement: {
@@ -62,6 +63,7 @@ i18n
 						bank: 'IBAN numarası',
 						amount: 'Aylık Aidat Miktarı',
 						submit: 'Gönder',
+						add: 'Ekle',
 						success: 'Başvurunuz için teşekkür ederiz!'
 					},
 					agreement: {
@@ -92,6 +94,7 @@ i18n
 						bank: 'رقم الحساب البنكي',
 						amount: 'مبلغ الاشتراك الشهري',
 						submit: 'إرسال',
+						add: 'إضافة',
 						success: 'شكرا لتقديم طلبك!'
 					},
 					agreement: {

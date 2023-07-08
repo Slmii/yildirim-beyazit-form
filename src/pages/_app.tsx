@@ -11,13 +11,16 @@ import { nlNL } from '@mui/x-date-pickers/locales';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
+import { ClerkProvider } from '@clerk/nextjs';
 
+import '../styles/app.css';
 import 'lib/i18n';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+// eslint-disable-next-line react-refresh/only-export-components
 function App({ Component, pageProps }: AppProps) {
 	const { i18n } = useTranslation();
 
@@ -55,17 +58,46 @@ function App({ Component, pageProps }: AppProps) {
 			key: `mui${i18n.dir()}`,
 			stylisPlugins
 		});
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [i18n.language]);
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
 			<CacheProvider value={rtlCache}>
 				<ThemeProvider theme={theme}>
-					<Component {...pageProps} />
+					<ClerkProvider
+						{...pageProps}
+						appearance={{
+							variables: {
+								colorPrimary: theme.palette.primary.main,
+								colorText: theme.palette.text.primary,
+								fontFamily: theme.typography.fontFamily,
+								borderRadius: `${theme.shape.borderRadius}px`,
+								spacing: theme.spacing,
+								colorDanger: theme.palette.error.main,
+								colorSuccess: theme.palette.success.main,
+								colorTextSecondary: theme.palette.text.secondary,
+								colorTextOnPrimaryBackground: theme.palette.primary.contrastText,
+								colorBackground: theme.palette.background.default,
+								colorInputText: theme.palette.text.primary,
+								colorWarning: theme.palette.warning.main,
+								fontWeight: theme.typography.fontWeightRegular
+							},
+							elements: {
+								footer: {
+									display: 'none'
+								}
+							}
+						}}
+					>
+						<Component {...pageProps} />
+					</ClerkProvider>
 				</ThemeProvider>
 			</CacheProvider>
 		</LocalizationProvider>
 	);
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default trpc.withTRPC(App);

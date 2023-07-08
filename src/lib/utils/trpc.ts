@@ -1,6 +1,7 @@
 import { httpBatchLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import { AppRouter } from 'server/routers/_app';
+import superjson from 'superjson';
 
 function getBaseUrl() {
 	if (typeof window !== 'undefined') {
@@ -17,13 +18,18 @@ function getBaseUrl() {
 }
 
 export const trpc = createTRPCNext<AppRouter>({
-	config(opts) {
+	config() {
 		return {
+			/**
+			 * Transformer used for data de-serialization from the server
+			 * @see https://trpc.io/docs/data-transformers
+			 **/
+			transformer: superjson,
+
 			queryClientConfig: {
 				defaultOptions: {
 					queries: {
 						retry: false,
-						refetchOnWindowFocus: false,
 						staleTime: 1000 * 60 * 60 * 1 // 1 hour
 					},
 					mutations: {
@@ -31,20 +37,18 @@ export const trpc = createTRPCNext<AppRouter>({
 					}
 				}
 			},
+
+			/**
+			 * Links used to determine request flow from client to server
+			 * @see https://trpc.io/docs/links
+			 * */
 			links: [
 				httpBatchLink({
 					/**
 					 * If you want to use SSR, you need to use the server's full URL
 					 * @link https://trpc.io/docs/ssr
 					 **/
-					url: `${getBaseUrl()}/api/trpc`,
-
-					// You can pass any HTTP headers you wish here
-					async headers() {
-						return {
-							// authorization: getAuthCookie(),
-						};
-					}
+					url: `${getBaseUrl()}/api/trpc`
 				})
 			]
 		};
