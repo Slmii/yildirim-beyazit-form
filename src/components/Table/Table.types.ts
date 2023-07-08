@@ -13,6 +13,7 @@ export interface TableProps {
 	columns: Column;
 	order: Order;
 	orderBy: keyof Member;
+	actions?: ColumnActions;
 	setSelectedRows: (rows: Member[]) => void;
 	setOrder: (order: Order) => void;
 	setOrderBy: (orderBy: keyof Member) => void;
@@ -41,4 +42,24 @@ export interface TableCellProps {
 	columnId: keyof Column;
 	column: ColumnOptions;
 	row: Member;
+}
+
+export type ColumnActions = {
+	[key: string]: ColumnActionOptions;
+};
+
+export interface ColumnActionOptions {
+	icon: Icons;
+	label: string;
+	action?: (rowId: string, data: Member) => void;
+	menu?: Array<{
+		label: string;
+		action: (rowId: string, data: Member) => void;
+	}>;
+}
+
+export interface TableCellActionProps {
+	rowId: string;
+	row: Member;
+	action: ColumnActionOptions;
 }

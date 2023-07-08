@@ -5,6 +5,7 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import EuroSymbolIcon from '@mui/icons-material/EuroSymbol';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 const icons = {
 	close: CloseIcon,
@@ -13,7 +14,8 @@ const icons = {
 	euro: EuroSymbolIcon,
 	unpinned: PushPinOutlinedIcon,
 	delete: DeleteIcon,
-	add: AddIcon
+	add: AddIcon,
+	edit: EditIcon
 };
 
 export type Icons = keyof typeof icons;

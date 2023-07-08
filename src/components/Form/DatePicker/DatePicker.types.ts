@@ -4,5 +4,5 @@ export interface DatePickerProps {
 	required?: boolean;
 	disabled?: boolean;
 	fullWidth?: boolean;
-	onChange?: (date: string | null) => void;
+	onChange?: (date: Date | null) => void;
 }

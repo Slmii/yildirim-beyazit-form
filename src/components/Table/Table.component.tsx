@@ -9,8 +9,36 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
-import { Column, TableCellProps, TableHeadProps, TableProps } from './Table.types';
+import { Column, TableCellActionProps, TableCellProps, TableHeadProps, TableProps } from './Table.types';
 import { Member } from '@prisma/client';
+import { IconButton } from 'components/IconButton';
+
+function TableCellAction({ rowId, row, action }: TableCellActionProps) {
+	// if (action.menu) {
+	// 	return (
+	// 		<Menu
+	// 			id='table-cell'
+	// 			label={<IconButton title={action.label} icon={action.icon} />}
+	// 			subMenu={action.menu.map(menu => ({
+	// 				label: menu.label,
+	// 				action: () => menu.action(rowId, row)
+	// 			}))}
+	// 		/>
+	// 	);
+	// }
+
+	return (
+		<IconButton
+			icon={action.icon}
+			tooltip={action.label}
+			color="default"
+			onClick={e => {
+				e.stopPropagation();
+				action.action?.(rowId, row);
+			}}
+		/>
+	);
+}
 
 const TableCell = React.memo(({ columnId, column, row }: TableCellProps) => {
 	const renderValue = () => {
@@ -115,6 +143,7 @@ const TableHead = ({
 						)}
 					</MuiTableCell>
 				))}
+				<MuiTableCell align="right">Acties</MuiTableCell>
 			</TableRow>
 		</MuiTableHead>
 	);
@@ -125,6 +154,7 @@ export const Table = ({
 	selectedRows,
 	setSelectedRows,
 	columns,
+	actions,
 	order,
 	orderBy,
 	setOrder,
@@ -228,6 +258,15 @@ export const Table = ({
 										column={column}
 									/>
 								))}
+								<MuiTableCell align="right">
+									{actions && (
+										<>
+											{Object.entries(actions).map(([key, action]) => {
+												return <TableCellAction key={key} action={action} row={asset} rowId={asset.id.toString()} />;
+											})}
+										</>
+									)}
+								</MuiTableCell>
 							</TableRow>
 						);
 					})}

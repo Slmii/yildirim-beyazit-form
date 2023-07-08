@@ -9,19 +9,25 @@ import { useDevice } from 'lib/hooks/useDevice';
 import { MemberForm } from 'components/MemberForm';
 import { trpc } from 'lib/utils/trpc';
 import { MemberForm as IMemberForm } from 'lib/types/MemberForm.types';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function Home() {
 	const { isMobile } = useDevice();
 	const { t } = useTranslation();
 
-	const { mutateAsync, isLoading } = trpc.member.create.useMutation();
+	const { mutateAsync, isLoading, isSuccess, reset, isError, error } = trpc.member.create.useMutation();
 
 	const handleOnFormSubmit = async (values: IMemberForm) => {
-		try {
-			await mutateAsync(values);
-		} catch (error) {
-			console.log(error);
+		if (!values.birthday) {
+			return;
 		}
+
+		await mutateAsync({
+			...values,
+			// Cast to date just to be sure
+			birthday: values.birthday as unknown as string
+		});
 	};
 
 	return (
@@ -65,6 +71,30 @@ export default function Home() {
 					<MemberForm onSubmit={handleOnFormSubmit} isLoading={isLoading} />
 				</Stack>
 			</Container>
+			<Snackbar
+				open={isSuccess || isError}
+				autoHideDuration={5000}
+				onClose={reset}
+				anchorOrigin={{
+					vertical: 'top',
+					horizontal: 'right'
+				}}
+			>
+				<Alert
+					onClose={reset}
+					severity={isSuccess ? 'success' : 'error'}
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						minWidth: '100%',
+						height: 50,
+						fontSize: 16,
+						border: theme => `1px solid ${theme.palette.success.dark}`
+					}}
+				>
+					{isError ? error.message : t('form.success')}
+				</Alert>
+			</Snackbar>
 		</>
 	);
 }

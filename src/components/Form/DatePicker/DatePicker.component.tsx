@@ -36,8 +36,8 @@ export const DatePicker = ({
 						format={i18n.dir() === 'ltr' ? 'dd/MM/yyyy' : undefined}
 						value={field.value as string}
 						onChange={date => {
-							field.onChange(date);
-							onChange?.(date);
+							field.onChange(date ? new Date(date) : null);
+							onChange?.(date ? new Date(date) : null);
 						}}
 						disabled={disabled}
 						label={label}

@@ -33,6 +33,8 @@ i18n
 						amount: 'Maandelijkse contributie',
 						submit: 'Versturen',
 						add: 'Toevoegen',
+						update: 'Bijwerken',
+						cancel: 'Annuleren',
 						success: 'Bedankt voor uw aanmelding!'
 					},
 					agreement: {
@@ -64,6 +66,8 @@ i18n
 						amount: 'Aylık Aidat Miktarı',
 						submit: 'Gönder',
 						add: 'Ekle',
+						update: 'Güncelle',
+						cancel: 'İptal',
 						success: 'Başvurunuz için teşekkür ederiz!'
 					},
 					agreement: {
@@ -95,6 +99,8 @@ i18n
 						amount: 'مبلغ الاشتراك الشهري',
 						submit: 'إرسال',
 						add: 'إضافة',
+						update: 'تحديث',
+						cancel: 'إلغاء',
 						success: 'شكرا لتقديم طلبك!'
 					},
 					agreement: {

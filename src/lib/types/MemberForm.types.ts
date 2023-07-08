@@ -1,6 +1,6 @@
 export interface MemberForm {
 	name: string;
-	birthday: string;
+	birthday: Date | null;
 	address: string;
 	zip: string;
 	city: string;

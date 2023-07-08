@@ -18,6 +18,7 @@ export const Members = () => {
 	const [orderBy, setOrderBy] = useState<keyof Member>('name');
 	const [search, setSearch] = useState<string>('');
 	const [membersOpen, setMembersOpen] = useState(false);
+	const [editMember, setEditMember] = useState<Member | undefined>(undefined);
 
 	const { isMobile } = useDevice();
 	const { data } = trpc.member.getAll.useQuery();
@@ -51,6 +52,22 @@ export const Members = () => {
 
 		return sorted;
 	}, [data, order, orderBy, search]);
+
+	const defaultFormValues = useMemo(() => {
+		if (editMember) {
+			return {
+				address: editMember.address,
+				amount: editMember.amount,
+				bank: editMember.bank,
+				city: editMember.city,
+				email: editMember.email,
+				name: editMember.name,
+				phone: editMember.phone,
+				zip: editMember.zip,
+				birthday: editMember.birthday
+			};
+		}
+	}, [editMember]);
 
 	return (
 		<>
@@ -96,17 +113,11 @@ export const Members = () => {
 							alignment: 'left',
 							type: 'string'
 						},
-						bank: {
-							label: 'IBAN',
+						birthday: {
+							label: 'Geb. datum',
 							sortable: true,
 							alignment: 'left',
-							type: 'string'
-						},
-						amount: {
-							label: 'Maandelijkse contributie',
-							sortable: true,
-							alignment: 'left',
-							type: 'string'
+							type: 'date'
 						},
 						address: {
 							label: 'Adres',
@@ -126,14 +137,26 @@ export const Members = () => {
 							alignment: 'left',
 							type: 'string'
 						},
+						email: {
+							label: 'Email',
+							sortable: true,
+							alignment: 'left',
+							type: 'string'
+						},
 						phone: {
 							label: 'Telefoon',
 							sortable: true,
 							alignment: 'left',
 							type: 'string'
 						},
-						email: {
-							label: 'Email',
+						bank: {
+							label: 'IBAN',
+							sortable: true,
+							alignment: 'left',
+							type: 'string'
+						},
+						amount: {
+							label: 'Maandelijkse contributie',
 							sortable: true,
 							alignment: 'left',
 							type: 'string'
@@ -152,9 +175,27 @@ export const Members = () => {
 					setOrderBy={setOrderBy}
 					selectedRows={selected}
 					setSelectedRows={setSelected}
+					actions={{
+						edit: {
+							icon: 'edit',
+							label: 'Bewerken',
+							action: (_row, member) => {
+								setMembersOpen(true);
+								setEditMember(member);
+							}
+						}
+					}}
 				/>
 			</Box>
-			<Dialog maxWidth="md" fullWidth onClose={() => setMembersOpen(false)} open={membersOpen}>
+			<Dialog
+				maxWidth="md"
+				fullWidth
+				onClose={() => {
+					setMembersOpen(false);
+					setEditMember(undefined);
+				}}
+				open={membersOpen}
+			>
 				<DialogTitle>Lid toevoegen</DialogTitle>
 				<DialogContent>
 					<Box
@@ -165,6 +206,7 @@ export const Members = () => {
 						<MemberForm
 							isAdmin
 							isLoading={false}
+							defaultValues={defaultFormValues}
 							onSubmit={data => {
 								return new Promise<void>(resolve => {
 									console.log(data);
