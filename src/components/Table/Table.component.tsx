@@ -8,10 +8,12 @@ import MuiTableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
-import React from 'react';
+import React, { useState } from 'react';
 import { Column, TableCellActionProps, TableCellProps, TableHeadProps, TableProps } from './Table.types';
 import { Member } from '@prisma/client';
 import { IconButton } from 'components/IconButton';
+import { readableDate } from 'lib/utils/date.utill';
+import Collapse from '@mui/material/Collapse';
 
 function TableCellAction({ rowId, row, action }: TableCellActionProps) {
 	// if (action.menu) {
@@ -49,12 +51,7 @@ const TableCell = React.memo(({ columnId, column, row }: TableCellProps) => {
 		}
 
 		if (value instanceof Date) {
-			return new Intl.DateTimeFormat('nl-NL', {
-				day: '2-digit',
-				month: 'long',
-				year: 'numeric',
-				hourCycle: 'h23'
-			}).format(value);
+			return readableDate(value);
 		}
 
 		if (typeof value === 'number') {
@@ -111,6 +108,7 @@ const TableHead = ({
 	return (
 		<MuiTableHead>
 			<TableRow>
+				<MuiTableCell padding="checkbox" />
 				<MuiTableCell padding="checkbox">
 					<Checkbox
 						color="primary"
@@ -158,8 +156,11 @@ export const Table = ({
 	order,
 	orderBy,
 	setOrder,
-	setOrderBy
+	setOrderBy,
+	onExpand
 }: TableProps) => {
+	const [expandedId, setExpandedId] = useState(0);
+
 	const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Member) => {
 		const isAsc = orderBy === property && order === 'asc';
 		setOrder(isAsc ? 'desc' : 'asc');
@@ -211,7 +212,7 @@ export const Table = ({
 
 	return (
 		<TableContainer>
-			<MuiTable sx={{ minWidth: 650 }} aria-labelledby="tableTitle">
+			<MuiTable sx={{ minWidth: 650 }} aria-labelledby="members-table">
 				<TableHead
 					numSelected={selectedRows.length}
 					order={order}
@@ -225,49 +226,68 @@ export const Table = ({
 					{rows.map(asset => {
 						const isItemSelected = isSelected(asset.id);
 						const labelId = `enhanced-table-checkbox-${asset.id}`;
+						const isExpanded = expandedId === asset.id;
 
 						return (
-							<TableRow
-								hover
-								onClick={event => handleOnRowClick(event, asset)}
-								role="checkbox"
-								aria-checked={isItemSelected}
-								tabIndex={-1}
-								key={asset.id}
-								selected={isItemSelected}
-							>
-								<MuiTableCell padding="checkbox">
-									<Checkbox
-										color="primary"
-										checked={isItemSelected}
-										inputProps={{
-											'aria-labelledby': labelId
-										}}
-										size="small"
-										onClick={e => {
-											e.stopPropagation();
-											handleCheckboxClick(asset);
-										}}
-									/>
-								</MuiTableCell>
-								{Object.entries(columns).map(([columnId, column]) => (
-									<TableCell
-										key={`${columnId}${asset.id}`}
-										row={asset}
-										columnId={columnId as keyof Column}
-										column={column}
-									/>
-								))}
-								<MuiTableCell align="right">
-									{actions && (
-										<>
-											{Object.entries(actions).map(([key, action]) => {
-												return <TableCellAction key={key} action={action} row={asset} rowId={asset.id.toString()} />;
-											})}
-										</>
-									)}
-								</MuiTableCell>
-							</TableRow>
+							<React.Fragment key={asset.id}>
+								<TableRow
+									hover
+									onClick={event => handleOnRowClick(event, asset)}
+									role="checkbox"
+									aria-checked={isItemSelected}
+									tabIndex={-1}
+									selected={isItemSelected}
+								>
+									<MuiTableCell padding="checkbox">
+										<IconButton
+											icon={isExpanded ? 'expandLess' : 'expandMore'}
+											tooltip={isExpanded ? 'Minder' : 'Meer'}
+											onClick={e => {
+												e.stopPropagation();
+												setExpandedId(isExpanded ? 0 : asset.id);
+											}}
+										/>
+									</MuiTableCell>
+									<MuiTableCell padding="checkbox">
+										<Checkbox
+											color="primary"
+											checked={isItemSelected}
+											inputProps={{
+												'aria-labelledby': labelId
+											}}
+											size="small"
+											onClick={e => {
+												e.stopPropagation();
+												handleCheckboxClick(asset);
+											}}
+										/>
+									</MuiTableCell>
+									{Object.entries(columns).map(([columnId, column]) => (
+										<TableCell
+											key={`${columnId}${asset.id}`}
+											row={asset}
+											columnId={columnId as keyof Column}
+											column={column}
+										/>
+									))}
+									<MuiTableCell align="right">
+										{actions && (
+											<>
+												{Object.entries(actions).map(([key, action]) => {
+													return <TableCellAction key={key} action={action} row={asset} rowId={asset.id.toString()} />;
+												})}
+											</>
+										)}
+									</MuiTableCell>
+								</TableRow>
+								<TableRow hover>
+									<MuiTableCell sx={{ paddingBottom: 0, paddingTop: 0 }} colSpan={Object.keys(columns).length + 3}>
+										<Collapse in={isExpanded} timeout="auto" unmountOnExit>
+											{onExpand(asset.id, asset)}
+										</Collapse>
+									</MuiTableCell>
+								</TableRow>
+							</React.Fragment>
 						);
 					})}
 				</TableBody>

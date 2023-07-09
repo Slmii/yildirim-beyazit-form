@@ -18,7 +18,7 @@ export default function Home() {
 
 	const { mutateAsync, isLoading, isSuccess, reset, isError, error } = trpc.member.create.useMutation();
 
-	const handleOnFormSubmit = async (values: IMemberForm) => {
+	const handleOnFormSubmit = async (values: IMemberForm, reset: () => void) => {
 		if (!values.birthday) {
 			return;
 		}
@@ -28,6 +28,8 @@ export default function Home() {
 			// Cast to date just to be sure
 			birthday: values.birthday as unknown as string
 		});
+
+		reset();
 	};
 
 	return (

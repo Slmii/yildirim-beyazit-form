@@ -7,6 +7,52 @@ export const memberRouter = router({
 	getAll: protectedProcedure.query(() => {
 		return prisma.member.findMany();
 	}),
+	deleteMany: protectedProcedure.input(z.array(z.number()).min(1)).mutation(async ({ input }) => {
+		const member = await prisma.member.deleteMany({
+			where: {
+				id: {
+					in: input
+				}
+			}
+		});
+
+		return member;
+	}),
+	update: protectedProcedure
+		.input(
+			z.object({
+				id: z.number(),
+				name: z.string(),
+				birthday: z.string(),
+				address: z.string(),
+				zip: z.string(),
+				city: z.string(),
+				email: z.string(),
+				phone: z.string(),
+				bank: z.string(),
+				amount: z.number().min(1)
+			})
+		)
+		.mutation(async ({ input }) => {
+			const member = await prisma.member.update({
+				where: {
+					id: input.id
+				},
+				data: {
+					name: input.name,
+					birthday: new Date(input.birthday),
+					address: input.address,
+					zip: input.zip,
+					city: input.city,
+					email: input.email,
+					phone: input.phone,
+					bank: input.bank,
+					amount: input.amount
+				}
+			});
+
+			return member;
+		}),
 	create: publicProcedure
 		.input(
 			z.object({

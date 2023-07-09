@@ -19,7 +19,7 @@ export const MemberForm = ({
 	defaultValues?: IMemberForm;
 	isLoading: boolean;
 	isAdmin?: boolean;
-	onSubmit: (data: IMemberForm) => Promise<void>;
+	onSubmit: (data: IMemberForm, reset: () => void) => Promise<void>;
 }) => {
 	const { t, i18n } = useTranslation();
 	const { isMobile } = useDevice();
@@ -35,8 +35,7 @@ export const MemberForm = ({
 	}, [i18n.language]);
 
 	const handleOnFormSubmit = async (values: IMemberForm, reset: () => void) => {
-		await onSubmit(values);
-		reset();
+		await onSubmit(values, reset);
 	};
 
 	const isEdit = typeof defaultValues !== 'undefined';

@@ -17,6 +17,7 @@ export interface TableProps {
 	setSelectedRows: (rows: Member[]) => void;
 	setOrder: (order: Order) => void;
 	setOrderBy: (orderBy: keyof Member) => void;
+	onExpand: (rowId: number, data: Member) => JSX.Element;
 }
 
 export interface ColumnOptions {
