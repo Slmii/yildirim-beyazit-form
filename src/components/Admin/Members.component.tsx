@@ -1,42 +1,34 @@
 import { Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import { Member } from '@prisma/client';
 import { Button } from 'components/Button';
 import { StandaloneField } from 'components/Form/Field';
-import { MemberForm } from 'components/MemberForm';
 import { Table } from 'components/Table';
 import { useDevice } from 'lib/hooks/useDevice';
-import { MemberForm as IMemberForm } from 'lib/types/MemberForm.types';
-import { readableDate } from 'lib/utils/date.utill';
-import { trpc } from 'lib/utils/trpc';
+import { readableDate } from 'lib/utils/date.utils';
+import { trpc } from 'lib/utils/trpc.utils';
 import { useMemo, useState } from 'react';
+import { PaymentsDialog } from './PaymentsDialog.component';
+import { UpdateDialog } from './UpdateDialog.component';
 
 export const Members = () => {
 	const [selected, setSelected] = useState<Member[]>([]);
 	const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 	const [orderBy, setOrderBy] = useState<keyof Member>('name');
 	const [search, setSearch] = useState<string>('');
+
 	const [membersOpen, setMembersOpen] = useState(false);
 	const [editMember, setEditMember] = useState<Member | undefined>(undefined);
+	const [paymentsOpen, setPaymentsOpen] = useState(false);
+	const [paymentsMember, setPaymentsMember] = useState<Member | undefined>(undefined);
 
 	const { isMobile } = useDevice();
 
 	const utils = trpc.useContext();
 	const { data } = trpc.member.getAll.useQuery();
-	const {
-		mutateAsync: update,
-		isLoading: updateIsLoading,
-		isSuccess: updateIsSuccess,
-		reset: updateReset,
-		isError: updateIsError,
-		error: updateError
-	} = trpc.member.update.useMutation();
 	const {
 		mutateAsync: deleteMany,
 		isLoading: deleteManyIsLoading,
@@ -86,38 +78,6 @@ export const Members = () => {
 
 		setSelected([]);
 	};
-
-	const handleOnSubmitForm = async (values: IMemberForm) => {
-		if (!values.birthday || !editMember) {
-			return;
-		}
-
-		await update({
-			...values,
-			id: editMember.id,
-			// Cast to date just to be sure
-			birthday: values.birthday as unknown as string
-		});
-
-		await utils.member.getAll.invalidate();
-		setMembersOpen(false);
-	};
-
-	const defaultFormValues = useMemo(() => {
-		if (editMember) {
-			return {
-				address: editMember.address,
-				amount: editMember.amount,
-				bank: editMember.bank,
-				city: editMember.city,
-				email: editMember.email,
-				name: editMember.name,
-				phone: editMember.phone,
-				zip: editMember.zip,
-				birthday: editMember.birthday
-			};
-		}
-	}, [editMember]);
 
 	return (
 		<>
@@ -172,42 +132,6 @@ export const Members = () => {
 							alignment: 'left',
 							type: 'string'
 						},
-						// birthday: {
-						// 	label: 'Geb. datum',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'date'
-						// },
-						// address: {
-						// 	label: 'Adres',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'string'
-						// },
-						// zip: {
-						// 	label: 'Postcode',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'string'
-						// },
-						// city: {
-						// 	label: 'Woonplaats',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'string'
-						// },
-						// email: {
-						// 	label: 'Email',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'string'
-						// },
-						// phone: {
-						// 	label: 'Telefoon',
-						// 	sortable: true,
-						// 	alignment: 'left',
-						// 	type: 'string'
-						// },
 						bank: {
 							label: 'IBAN',
 							sortable: true,
@@ -218,7 +142,7 @@ export const Members = () => {
 							label: 'Maandelijkse contributie',
 							sortable: true,
 							alignment: 'left',
-							type: 'string'
+							type: 'currency'
 						},
 						createdAt: {
 							label: 'Inschrijfdatum',
@@ -242,99 +166,35 @@ export const Members = () => {
 								setMembersOpen(true);
 								setEditMember(member);
 							}
+						},
+						payment: {
+							icon: 'payment',
+							label: 'Betalingen',
+							action: (_row, member) => {
+								setPaymentsOpen(true);
+								setPaymentsMember(member);
+							}
 						}
 					}}
-					onExpand={(_id, member) => {
-						return (
-							<Box sx={{ p: 2 }}>
-								<Stack direction="row" justifyContent="space-between">
-									<Stack direction="column" spacing={0}>
-										<Typography fontWeight="bold" variant="body1" color="textSecondary">
-											Geboortedatum
-										</Typography>
-										<Typography variant="body1" color="textSecondary">
-											{readableDate(member.birthday)}
-										</Typography>
-									</Stack>
-									<Stack direction="column" spacing={0}>
-										<Typography fontWeight="bold" variant="body1" color="textSecondary">
-											Adres
-										</Typography>
-										<Typography variant="body1" color="textSecondary">
-											{member.address}
-										</Typography>
-									</Stack>
-									<Stack direction="column" spacing={0}>
-										<Typography fontWeight="bold" variant="body1" color="textSecondary">
-											Postcode
-										</Typography>
-										<Typography variant="body1" color="textSecondary">
-											{member.zip}
-										</Typography>
-									</Stack>
-									<Stack direction="column" spacing={0}>
-										<Typography fontWeight="bold" variant="body1" color="textSecondary">
-											Woonplaats
-										</Typography>
-										<Typography variant="body1" color="textSecondary">
-											{member.city}
-										</Typography>
-									</Stack>
-								</Stack>
-							</Box>
-						);
-					}}
+					onExpand={(_id, member) => <ExpandedComponent member={member} />}
 				/>
 			</Box>
-			<Dialog
-				maxWidth="md"
-				fullWidth
+			<UpdateDialog
+				open={membersOpen}
 				onClose={() => {
 					setMembersOpen(false);
 					setEditMember(undefined);
 				}}
-				open={membersOpen}
-			>
-				<DialogTitle>Lid toevoegen</DialogTitle>
-				<DialogContent>
-					<Box
-						sx={{
-							pt: 2
-						}}
-					>
-						<MemberForm
-							isAdmin
-							isLoading={updateIsLoading}
-							defaultValues={defaultFormValues}
-							onSubmit={handleOnSubmitForm}
-						/>
-					</Box>
-				</DialogContent>
-			</Dialog>
-			<Snackbar
-				open={updateIsSuccess || updateIsError}
-				autoHideDuration={5000}
-				onClose={updateReset}
-				anchorOrigin={{
-					vertical: 'top',
-					horizontal: 'right'
+				member={editMember}
+			/>
+			<PaymentsDialog
+				open={paymentsOpen}
+				onClose={() => {
+					setPaymentsOpen(false);
+					setPaymentsMember(undefined);
 				}}
-			>
-				<Alert
-					onClose={updateReset}
-					severity={updateIsSuccess ? 'success' : 'error'}
-					sx={{
-						display: 'flex',
-						alignItems: 'center',
-						minWidth: '100%',
-						height: 50,
-						fontSize: 16,
-						border: theme => `1px solid ${theme.palette.success.dark}`
-					}}
-				>
-					{updateIsError ? updateError.message : 'Successvol geüpdate!'}
-				</Alert>
-			</Snackbar>
+				member={paymentsMember}
+			/>
 			<Snackbar
 				open={deleteManyIsSuccess || deleteManyIsError}
 				autoHideDuration={5000}
@@ -360,5 +220,46 @@ export const Members = () => {
 				</Alert>
 			</Snackbar>
 		</>
+	);
+};
+
+const ExpandedComponent = ({ member }: { member: Member }) => {
+	return (
+		<Box sx={{ p: 2 }}>
+			<Stack direction="row" spacing={4}>
+				<Stack direction="column" spacing={0}>
+					<Typography fontWeight="bold" variant="body2" color="textSecondary">
+						Geboortedatum
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						{readableDate(member.birthday)}
+					</Typography>
+				</Stack>
+				<Stack direction="column" spacing={0}>
+					<Typography fontWeight="bold" variant="body2" color="textSecondary">
+						Adres
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						{member.address}
+					</Typography>
+				</Stack>
+				<Stack direction="column" spacing={0}>
+					<Typography fontWeight="bold" variant="body2" color="textSecondary">
+						Email
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						{member.email}
+					</Typography>
+				</Stack>
+				<Stack direction="column" spacing={0}>
+					<Typography fontWeight="bold" variant="body2" color="textSecondary">
+						Telefoon
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						{member.phone}
+					</Typography>
+				</Stack>
+			</Stack>
+		</Box>
 	);
 };

@@ -1,20 +1,17 @@
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
 import { getAuth } from '@clerk/nextjs/server';
-import type { SignedInAuthObject, SignedOutAuthObject } from '@clerk/nextjs/server';
-
-interface AuthContext {
-	auth: SignedInAuthObject | SignedOutAuthObject;
-}
-
-export const createContextInner = async ({ auth }: AuthContext) => {
-	return {
-		auth
-	};
-};
+import { clerkClient } from '@clerk/nextjs';
+import { prisma } from './prisma';
 
 export const createContext = async (opts: trpcNext.CreateNextContextOptions) => {
-	return await createContextInner({ auth: getAuth(opts.req) });
+	const { req } = opts;
+	const session = getAuth(req);
+
+	const userId = session.userId;
+	const user = userId ? await clerkClient.users.getUser(userId) : null;
+
+	return { user, prisma };
 };
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;

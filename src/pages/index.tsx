@@ -7,7 +7,7 @@ import { LanguageSwitcher } from 'components/LanguageSwitcher/LanguageSwitcher.c
 import { useTranslation } from 'react-i18next';
 import { useDevice } from 'lib/hooks/useDevice';
 import { MemberForm } from 'components/MemberForm';
-import { trpc } from 'lib/utils/trpc';
+import { trpc } from 'lib/utils/trpc.utils';
 import { MemberForm as IMemberForm } from 'lib/types/MemberForm.types';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -74,7 +74,7 @@ export default function Home() {
 				</Stack>
 			</Container>
 			<Snackbar
-				open={isSuccess || isError}
+				open={isSuccess}
 				autoHideDuration={5000}
 				onClose={reset}
 				anchorOrigin={{
@@ -84,7 +84,7 @@ export default function Home() {
 			>
 				<Alert
 					onClose={reset}
-					severity={isSuccess ? 'success' : 'error'}
+					severity="success"
 					sx={{
 						display: 'flex',
 						alignItems: 'center',
@@ -94,7 +94,31 @@ export default function Home() {
 						border: theme => `1px solid ${theme.palette.success.dark}`
 					}}
 				>
-					{isError ? error.message : t('form.success')}
+					{t('form.success')}
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				open={isError}
+				autoHideDuration={5000}
+				onClose={reset}
+				anchorOrigin={{
+					vertical: 'top',
+					horizontal: 'right'
+				}}
+			>
+				<Alert
+					onClose={reset}
+					severity="error"
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						minWidth: '100%',
+						height: 50,
+						fontSize: 16,
+						border: theme => `1px solid ${theme.palette.error.dark}`
+					}}
+				>
+					{error?.message}
 				</Alert>
 			</Snackbar>
 		</>

@@ -1,5 +1,6 @@
-import { httpBatchLink } from '@trpc/client';
+import { httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
 
@@ -43,6 +44,11 @@ export const trpc = createTRPCNext<AppRouter>({
 			 * @see https://trpc.io/docs/links
 			 * */
 			links: [
+				loggerLink({
+					enabled: opts =>
+						process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error)
+				}),
+
 				httpBatchLink({
 					/**
 					 * If you want to use SSR, you need to use the server's full URL
@@ -58,3 +64,17 @@ export const trpc = createTRPCNext<AppRouter>({
 	 **/
 	ssr: false
 });
+
+/**
+ * Inference helper for inputs.
+ *
+ * @example type HelloInput = RouterInputs['example']['hello']
+ */
+export type RouterInputs = inferRouterInputs<AppRouter>;
+
+/**
+ * Inference helper for outputs.
+ *
+ * @example type HelloOutput = RouterOutputs['example']['hello']
+ */
+export type RouterOutputs = inferRouterOutputs<AppRouter>;

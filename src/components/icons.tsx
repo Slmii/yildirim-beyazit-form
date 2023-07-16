@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 const icons = {
 	close: CloseIcon,
@@ -19,7 +20,8 @@ const icons = {
 	add: AddIcon,
 	edit: EditIcon,
 	expandLess: ExpandLessIcon,
-	expandMore: ExpandMoreIcon
+	expandMore: ExpandMoreIcon,
+	payment: PaymentIcon
 };
 
 export type Icons = keyof typeof icons;

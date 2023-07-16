@@ -1,9 +1,9 @@
-import { authMiddleware } from '@clerk/nextjs';
+import { withClerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default authMiddleware({
-	publicRoutes: ['/', '/admin/sign-in']
+export default withClerkMiddleware(() => {
+	return NextResponse.next();
 });
 
-export const config = {
-	matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)']
-};
+// Stop Middleware running on static files
+export const config = { matcher: '/((?!_next/image|_next/static|favicon.ico).*)' };

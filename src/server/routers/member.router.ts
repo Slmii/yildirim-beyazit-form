@@ -1,58 +1,8 @@
 import { protectedProcedure, publicProcedure, router } from 'server/trpc';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
-import { prisma } from 'server/prisma';
 
 export const memberRouter = router({
-	getAll: protectedProcedure.query(() => {
-		return prisma.member.findMany();
-	}),
-	deleteMany: protectedProcedure.input(z.array(z.number()).min(1)).mutation(async ({ input }) => {
-		const member = await prisma.member.deleteMany({
-			where: {
-				id: {
-					in: input
-				}
-			}
-		});
-
-		return member;
-	}),
-	update: protectedProcedure
-		.input(
-			z.object({
-				id: z.number(),
-				name: z.string(),
-				birthday: z.string(),
-				address: z.string(),
-				zip: z.string(),
-				city: z.string(),
-				email: z.string(),
-				phone: z.string(),
-				bank: z.string(),
-				amount: z.number().min(1)
-			})
-		)
-		.mutation(async ({ input }) => {
-			const member = await prisma.member.update({
-				where: {
-					id: input.id
-				},
-				data: {
-					name: input.name,
-					birthday: new Date(input.birthday),
-					address: input.address,
-					zip: input.zip,
-					city: input.city,
-					email: input.email,
-					phone: input.phone,
-					bank: input.bank,
-					amount: input.amount
-				}
-			});
-
-			return member;
-		}),
 	create: publicProcedure
 		.input(
 			z.object({
@@ -67,8 +17,8 @@ export const memberRouter = router({
 				amount: z.number().min(1)
 			})
 		)
-		.mutation(async ({ input }) => {
-			const member = await prisma.member.create({
+		.mutation(async ({ input, ctx }) => {
+			const member = await ctx.prisma.member.create({
 				data: {
 					name: input.name,
 					birthday: new Date(input.birthday),
@@ -116,6 +66,63 @@ export const memberRouter = router({
 					<p><b>Banka:</b> ${input.bank}</p>
 					<p><b>Aidat Miktarı:</b> ${input.amount}</p>
 				`
+			});
+
+			return member;
+		}),
+
+	getAll: protectedProcedure.query(async ({ ctx }) => {
+		const members = await ctx.prisma.member.findMany();
+
+		return members.map(member => ({
+			...member,
+			address: `${member.address}, ${member.zip} ${member.city}`
+		}));
+	}),
+
+	deleteMany: protectedProcedure.input(z.array(z.number()).min(1)).mutation(async ({ input, ctx }) => {
+		const member = await ctx.prisma.member.deleteMany({
+			where: {
+				id: {
+					in: input
+				}
+			}
+		});
+
+		return member;
+	}),
+
+	update: protectedProcedure
+		.input(
+			z.object({
+				id: z.number(),
+				name: z.string(),
+				birthday: z.string(),
+				address: z.string(),
+				zip: z.string(),
+				city: z.string(),
+				email: z.string(),
+				phone: z.string(),
+				bank: z.string(),
+				amount: z.number().min(1)
+			})
+		)
+		.mutation(async ({ input, ctx }) => {
+			const member = await ctx.prisma.member.update({
+				where: {
+					id: input.id
+				},
+				data: {
+					name: input.name,
+					birthday: new Date(input.birthday),
+					address: input.address,
+					zip: input.zip,
+					city: input.city,
+					email: input.email,
+					phone: input.phone,
+					bank: input.bank,
+					amount: input.amount
+				}
 			});
 
 			return member;

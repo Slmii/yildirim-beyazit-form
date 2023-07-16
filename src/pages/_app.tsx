@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { trpc } from 'lib/utils/trpc';
+import { trpc } from 'lib/utils/trpc.utils';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 import { useEffect, useMemo } from 'react';
@@ -11,7 +11,9 @@ import { nlNL } from '@mui/x-date-pickers/locales';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut } from '@clerk/nextjs';
+import { useRouter } from 'next/router';
+import { PUBLIC_PAGES } from 'lib/constants/routes';
 
 import '../styles/app.css';
 import 'lib/i18n';
@@ -23,6 +25,12 @@ import '@fontsource/roboto/700.css';
 // eslint-disable-next-line react-refresh/only-export-components
 function App({ Component, pageProps }: AppProps) {
 	const { i18n } = useTranslation();
+
+	// Get the pathname
+	const { pathname } = useRouter();
+
+	// Check if the current route matches a public page
+	const isPublicPage = PUBLIC_PAGES.includes(pathname);
 
 	useEffect(() => {
 		if (i18n.language === 'ar') {
@@ -91,7 +99,18 @@ function App({ Component, pageProps }: AppProps) {
 							}
 						}}
 					>
-						<Component {...pageProps} />
+						{isPublicPage ? (
+							<Component {...pageProps} />
+						) : (
+							<>
+								<SignedIn>
+									<Component {...pageProps} />
+								</SignedIn>
+								<SignedOut>
+									<RedirectToSignIn />
+								</SignedOut>
+							</>
+						)}
 					</ClerkProvider>
 				</ThemeProvider>
 			</CacheProvider>
