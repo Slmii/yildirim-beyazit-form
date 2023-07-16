@@ -73,7 +73,7 @@ export const UpdateDialog = ({ onClose, open, member }: { open: boolean; onClose
 				</DialogContent>
 			</Dialog>
 			<Snackbar
-				open={updateIsSuccess || updateIsError}
+				open={updateIsSuccess}
 				autoHideDuration={5000}
 				onClose={updateReset}
 				anchorOrigin={{
@@ -83,7 +83,7 @@ export const UpdateDialog = ({ onClose, open, member }: { open: boolean; onClose
 			>
 				<Alert
 					onClose={updateReset}
-					severity={updateIsSuccess ? 'success' : 'error'}
+					severity="success"
 					sx={{
 						display: 'flex',
 						alignItems: 'center',
@@ -93,7 +93,31 @@ export const UpdateDialog = ({ onClose, open, member }: { open: boolean; onClose
 						border: theme => `1px solid ${theme.palette.success.dark}`
 					}}
 				>
-					{updateIsError ? updateError.message : 'Successvol geüpdate!'}
+					Successvol geüpdate!
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				open={updateIsError}
+				autoHideDuration={5000}
+				onClose={updateReset}
+				anchorOrigin={{
+					vertical: 'top',
+					horizontal: 'right'
+				}}
+			>
+				<Alert
+					onClose={updateReset}
+					severity="error"
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						minWidth: '100%',
+						height: 50,
+						fontSize: 16,
+						border: theme => `1px solid ${theme.palette.error.dark}`
+					}}
+				>
+					{updateError?.message}
 				</Alert>
 			</Snackbar>
 		</>
