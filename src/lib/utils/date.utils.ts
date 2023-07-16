@@ -1,5 +1,5 @@
-export const readableDate = (date: Date) => {
-	return new Intl.DateTimeFormat('nl-NL', {
+export const readableDate = (date: Date, locale = 'nl-NL') => {
+	return new Intl.DateTimeFormat(locale, {
 		day: '2-digit',
 		month: '2-digit',
 		year: 'numeric',
@@ -7,7 +7,7 @@ export const readableDate = (date: Date) => {
 	}).format(date);
 };
 
-export const getMonths = () => {
+export const getMonths = (locale = 'nl-NL') => {
 	// Get months with label and its index
 	// Example output: [{ label: 'Januari', value: 0 }, ...]
 
@@ -17,7 +17,7 @@ export const getMonths = () => {
 	for (let i = 0; i < 12; i++) {
 		date.setMonth(i);
 		months.push({
-			label: new Intl.DateTimeFormat('nl-NL', {
+			label: new Intl.DateTimeFormat(locale, {
 				month: 'long'
 			}).format(date),
 			value: i

@@ -13,6 +13,7 @@ import { trpc } from 'lib/utils/trpc.utils';
 import { useMemo, useState } from 'react';
 import { PaymentsDialog } from './PaymentsDialog.component';
 import { UpdateDialog } from './UpdateDialog.component';
+import { useTranslation } from 'react-i18next';
 
 export const Members = () => {
 	const [selected, setSelected] = useState<Member[]>([]);
@@ -26,6 +27,7 @@ export const Members = () => {
 	const [paymentsMember, setPaymentsMember] = useState<Member | undefined>(undefined);
 
 	const { isMobile } = useDevice();
+	const { t } = useTranslation();
 
 	const utils = trpc.useContext();
 	const { data } = trpc.member.getAll.useQuery();
@@ -93,7 +95,7 @@ export const Members = () => {
 					name="search"
 					value={search}
 					onChange={e => setSearch(e.target.value)}
-					label="Zoeken"
+					label={t('admin.search')}
 				/>
 				<Stack
 					width={isMobile ? '100%' : undefined}
@@ -102,7 +104,7 @@ export const Members = () => {
 					justifyContent="flex-end"
 				>
 					<Button fullWidth={isMobile} startIcon="add" variant="contained" onClick={() => setMembersOpen(true)}>
-						Toevoegen
+						{t('admin.add')}
 					</Button>
 					<Button
 						fullWidth={isMobile}
@@ -113,7 +115,7 @@ export const Members = () => {
 						variant="contained"
 						color="error"
 					>
-						Verwijderen
+						{t('admin.delete')}
 					</Button>
 				</Stack>
 			</Stack>
@@ -127,7 +129,7 @@ export const Members = () => {
 				<Table
 					columns={{
 						name: {
-							label: 'Naam',
+							label: t('admin.columns.name'),
 							sortable: true,
 							alignment: 'left',
 							type: 'string'
@@ -139,13 +141,13 @@ export const Members = () => {
 							type: 'string'
 						},
 						amount: {
-							label: 'Maandelijkse contributie',
+							label: t('admin.columns.amount'),
 							sortable: true,
 							alignment: 'left',
 							type: 'currency'
 						},
 						createdAt: {
-							label: 'Inschrijfdatum',
+							label: t('admin.columns.memberDate'),
 							sortable: true,
 							alignment: 'left',
 							type: 'date'
@@ -161,7 +163,7 @@ export const Members = () => {
 					actions={{
 						edit: {
 							icon: 'edit',
-							label: 'Bewerken',
+							label: t('admin.tooltips.edit'),
 							action: (_row, member) => {
 								setMembersOpen(true);
 								setEditMember(member);
@@ -169,7 +171,7 @@ export const Members = () => {
 						},
 						payment: {
 							icon: 'payment',
-							label: 'Betalingen',
+							label: t('admin.tooltips.payments'),
 							action: (_row, member) => {
 								setPaymentsOpen(true);
 								setPaymentsMember(member);

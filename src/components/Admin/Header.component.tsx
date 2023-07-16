@@ -4,9 +4,12 @@ import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import { LanguageSwitcher } from './LanguageSwticher.component';
+import { useTranslation } from 'react-i18next';
 
 export const Header = () => {
 	const { user } = useUser();
+	const { t } = useTranslation();
 
 	return (
 		<AppBar position="static">
@@ -26,10 +29,11 @@ export const Header = () => {
 						height={50}
 					/>
 					<Typography variant="h6" component="div">
-						Yildirim Beyazit Moskee Administratie
+						{t('admin.title')}
 					</Typography>
 				</Stack>
 				<Stack direction="row" spacing={2} alignItems="center">
+					<LanguageSwitcher />
 					<Typography variant="body1" component="div">
 						{user?.username}
 					</Typography>

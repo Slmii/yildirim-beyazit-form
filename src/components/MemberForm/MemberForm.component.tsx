@@ -6,8 +6,8 @@ import { DatePicker } from 'components/Form/DatePicker';
 import { Field, IBANInput, TelField } from 'components/Form/Field';
 import { schema } from 'lib/form.schema';
 import { useDevice } from 'lib/hooks/useDevice';
+import { useLocale } from 'lib/hooks/useLocale';
 import { MemberForm as IMemberForm } from 'lib/types/MemberForm.types';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const MemberForm = ({
@@ -21,18 +21,10 @@ export const MemberForm = ({
 	isAdmin?: boolean;
 	onSubmit: (data: IMemberForm, reset: () => void) => Promise<void>;
 }) => {
-	const { t, i18n } = useTranslation();
-	const { isMobile } = useDevice();
+	const { t } = useTranslation();
 
-	const langToLocale = useMemo(() => {
-		if (i18n.language === 'ar') {
-			return 'ar-SA';
-		} else if (i18n.language === 'tr') {
-			return 'tr-TR';
-		} else {
-			return 'nl-NL';
-		}
-	}, [i18n.language]);
+	const { isMobile } = useDevice();
+	const locale = useLocale();
 
 	const handleOnFormSubmit = async (values: IMemberForm, reset: () => void) => {
 		await onSubmit(values, reset);
@@ -83,7 +75,7 @@ export const MemberForm = ({
 									dangerouslySetInnerHTML={{
 										__html: t('agreement.text', {
 											name: `<b>${watch('name').length ? watch('name') : '-'}</b>`,
-											amount: `<b>${new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(
+											amount: `<b>${new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(
 												watch('amount')
 											)}</b>`
 										})
@@ -95,7 +87,7 @@ export const MemberForm = ({
 									{t('date')}
 								</Typography>
 								<Typography variant="body2" fontWeight="light" component="p">
-									{new Date().toLocaleDateString(langToLocale, {
+									{new Date().toLocaleDateString(locale, {
 										year: 'numeric',
 										month: 'long',
 										day: 'numeric'

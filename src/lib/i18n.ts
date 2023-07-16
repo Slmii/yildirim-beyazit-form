@@ -47,6 +47,24 @@ i18n
 						minAmount: 'Minimaal {{amount}} euro',
 						provideValidEmail: 'Vul een geldig e-mailadres in',
 						provideValidIBAN: 'Vul een geldig IBAN nummer in'
+					},
+					admin: {
+						title: 'Yildirim Beyazit Moskee Administratie',
+						search: 'Zoeken',
+						add: 'Toevoegen',
+						delete: 'Verwijderen',
+						update: 'Bijwerken',
+						columns: {
+							name: 'Naam',
+							amount: 'Maandelijks contributie',
+							memberDate: 'Inschrijfdatum',
+							actions: 'Acties',
+							year: 'Jaar'
+						},
+						tooltips: {
+							edit: 'Bewerken',
+							payments: 'Betalingsgeschiedenis'
+						}
 					}
 				}
 			},
@@ -80,6 +98,24 @@ i18n
 						minAmount: 'En az {{amount}} euro',
 						provideValidEmail: 'Geçerli bir e-posta adresi giriniz',
 						provideValidIBAN: 'Geçerli bir IBAN numarası giriniz'
+					},
+					admin: {
+						title: 'Yildirim Beyazit Cami Yönetim',
+						search: 'Arama',
+						add: 'Ekle',
+						delete: 'Sil',
+						update: 'Güncelle',
+						columns: {
+							name: 'Ad',
+							amount: 'Aylık Aidat Miktarı',
+							memberDate: 'Kayıt Tarihi',
+							actions: 'İşlemler',
+							year: 'Yıl'
+						},
+						tooltips: {
+							edit: 'Düzenle',
+							payments: 'Ödeme Geçmişi'
+						}
 					}
 				}
 			},
@@ -113,6 +149,24 @@ i18n
 						minAmount: 'الحد الأدنى {{amount}} يورو',
 						provideValidEmail: 'يرجى إدخال عنوان بريد إلكتروني صالح',
 						provideValidIBAN: 'يرجى إدخال رقم IBAN صالح'
+					},
+					admin: {
+						title: 'إدارة مسجد يلديرم بيازيد',
+						search: 'بحث',
+						add: 'إضافة',
+						delete: 'حذف',
+						update: 'تحديث',
+						columns: {
+							name: 'الاسم',
+							amount: 'مبلغ الاشتراك الشهري',
+							memberDate: 'تاريخ التسجيل',
+							actions: 'الإجراءات',
+							year: 'السنة'
+						},
+						tooltips: {
+							edit: 'تحرير',
+							payments: 'سجل الدفعات'
+						}
 					}
 				}
 			}

@@ -13,6 +13,8 @@ import { Column, ColumnOptions, TableCellActionProps, TableCellProps, TableHeadP
 import { IconButton } from 'components/IconButton';
 import { readableDate } from 'lib/utils/date.utils';
 import Collapse from '@mui/material/Collapse';
+import { useTranslation } from 'react-i18next';
+import { useLocale } from 'lib/hooks/useLocale';
 
 function TableCellAction<T>({ rowId, row, action }: TableCellActionProps<T>) {
 	// if (action.menu) {
@@ -46,6 +48,8 @@ function isDate(value: unknown): value is Date {
 }
 
 function TableCell<T extends { id: number }>({ columnId, column, row }: TableCellProps<T>) {
+	const locale = useLocale();
+
 	const renderValue = () => {
 		const value = row[columnId as keyof Column<T>];
 
@@ -54,11 +58,11 @@ function TableCell<T extends { id: number }>({ columnId, column, row }: TableCel
 		}
 
 		if (column.type === 'date' && isDate(value)) {
-			return readableDate(value);
+			return readableDate(value, locale);
 		}
 
 		if (column.type === 'currency') {
-			return new Intl.NumberFormat('nl-NL', {
+			return new Intl.NumberFormat(locale, {
 				style: 'currency',
 				currency: 'EUR'
 			}).format(value);
@@ -107,6 +111,7 @@ function TableHead<T>({
 	hasExpand,
 	hasCheckbox
 }: TableHeadProps<T>) {
+	const { t } = useTranslation();
 	const createSortHandler = (property: keyof Column<T>) => (event: React.MouseEvent<unknown>) => {
 		onRequestSort(event, property);
 	};
@@ -155,7 +160,7 @@ function TableHead<T>({
 						)}
 					</MuiTableCell>
 				))}
-				{hasActions && <MuiTableCell align="right">Acties</MuiTableCell>}
+				{hasActions && <MuiTableCell align="right">{t('admin.columns.actions')}</MuiTableCell>}
 			</TableRow>
 		</MuiTableHead>
 	);

@@ -4,12 +4,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Member } from '@prisma/client';
 import { Table } from 'components/Table';
+import { useLocale } from 'lib/hooks/useLocale';
 import { getMonths } from 'lib/utils/date.utils';
+import { useTranslation } from 'react-i18next';
 
 export const PaymentsDialog = ({ onClose, open, member }: { open: boolean; onClose: () => void; member?: Member }) => {
+	const locale = useLocale();
+	const { t } = useTranslation();
+
 	return (
 		<Dialog maxWidth="xl" fullWidth onClose={onClose} open={open}>
-			<DialogTitle>Betalingen</DialogTitle>
+			<DialogTitle>{t('admin.tooltips.payments')}</DialogTitle>
 			<DialogContent>
 				<Box
 					sx={{
@@ -19,12 +24,12 @@ export const PaymentsDialog = ({ onClose, open, member }: { open: boolean; onClo
 					<Table
 						columns={{
 							year: {
-								label: 'Jaar',
+								label: t('admin.columns.year'),
 								sortable: true,
 								alignment: 'left',
 								type: 'string'
 							},
-							...getMonths().reduce(
+							...getMonths(locale).reduce(
 								(acc, month) => ({
 									...acc,
 									[month.label]: {
