@@ -16,7 +16,7 @@ export default function Home() {
 	const { isMobile } = useDevice();
 	const { t } = useTranslation();
 
-	const { mutateAsync, isLoading, isSuccess, reset, isError, error } = trpc.member.create.useMutation();
+	const { mutateAsync, isLoading, isSuccess, reset, isError, error } = trpc.members.create.useMutation();
 
 	const handleOnFormSubmit = async (values: IMemberForm, reset: () => void) => {
 		if (!values.birthday) {

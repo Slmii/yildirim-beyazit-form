@@ -19,7 +19,7 @@ export const UpdateDialog = ({ onClose, open, member }: { open: boolean; onClose
 		reset: updateReset,
 		isError: updateIsError,
 		error: updateError
-	} = trpc.member.update.useMutation();
+	} = trpc.members.update.useMutation();
 
 	const handleOnSubmitForm = async (values: IMemberForm) => {
 		if (!values.birthday || !member) {
@@ -33,7 +33,7 @@ export const UpdateDialog = ({ onClose, open, member }: { open: boolean; onClose
 			birthday: values.birthday as unknown as string
 		});
 
-		await utils.member.getAll.invalidate();
+		await utils.members.getAll.invalidate();
 		onClose();
 	};
 

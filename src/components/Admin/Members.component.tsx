@@ -30,7 +30,7 @@ export const Members = () => {
 	const { t } = useTranslation();
 
 	const utils = trpc.useContext();
-	const { data } = trpc.member.getAll.useQuery();
+	const { data } = trpc.members.getAll.useQuery();
 	const {
 		mutateAsync: deleteMany,
 		isLoading: deleteManyIsLoading,
@@ -38,7 +38,7 @@ export const Members = () => {
 		reset: deleteManyReset,
 		isError: deleteManyIsError,
 		error: deleteManyError
-	} = trpc.member.deleteMany.useMutation();
+	} = trpc.members.deleteMany.useMutation();
 
 	const members = useMemo(() => {
 		if (!data) {
@@ -76,7 +76,7 @@ export const Members = () => {
 		}
 
 		await deleteMany(selected.map(member => member.id));
-		await utils.member.getAll.invalidate();
+		await utils.members.getAll.invalidate();
 
 		setSelected([]);
 	};

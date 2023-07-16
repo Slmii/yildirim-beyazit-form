@@ -2,7 +2,7 @@ import { protectedProcedure, publicProcedure, router } from 'server/trpc';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
 
-export const memberRouter = router({
+export const membersRouter = router({
 	create: publicProcedure
 		.input(
 			z.object({

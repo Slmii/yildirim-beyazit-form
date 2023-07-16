@@ -56,7 +56,7 @@ i18n
 						update: 'Bijwerken',
 						columns: {
 							name: 'Naam',
-							amount: 'Maandelijks contributie',
+							amount: 'Maandelijkse contributie',
 							memberDate: 'Inschrijfdatum',
 							actions: 'Acties',
 							year: 'Jaar'

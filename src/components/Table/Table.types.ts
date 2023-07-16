@@ -13,6 +13,7 @@ export interface TableProps<T> {
 	order?: Order;
 	orderBy?: keyof T;
 	actions?: ColumnActions<T>;
+	size?: 'small' | 'medium';
 	setSelectedRows?: (rows: T[]) => void;
 	setOrder?: (order: Order) => void;
 	setOrderBy?: (orderBy: keyof T) => void;
@@ -23,7 +24,7 @@ export interface ColumnOptions {
 	label: string;
 	sortable: boolean;
 	alignment: 'left' | 'center' | 'right';
-	type: 'string' | 'date' | 'currency' | 'number';
+	type: 'string' | 'date' | 'currency' | 'number' | 'jsx';
 	icon?: Icons;
 	iconAlt?: Icons;
 }

@@ -1,8 +1,10 @@
 import { router } from 'server/trpc';
-import { memberRouter } from './member.router';
+import { membersRouter } from './member.router';
+import { paymentsRouter } from './payment.router';
 
 export const appRouter = router({
-	member: memberRouter
+	members: membersRouter,
+	payments: paymentsRouter
 });
 
 // export type definition of API

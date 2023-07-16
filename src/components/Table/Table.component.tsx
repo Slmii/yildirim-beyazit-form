@@ -15,6 +15,7 @@ import { readableDate } from 'lib/utils/date.utils';
 import Collapse from '@mui/material/Collapse';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from 'lib/hooks/useLocale';
+import { readableNumber } from 'lib/utils/number.utils';
 
 function TableCellAction<T>({ rowId, row, action }: TableCellActionProps<T>) {
 	// if (action.menu) {
@@ -62,10 +63,7 @@ function TableCell<T extends { id: number }>({ columnId, column, row }: TableCel
 		}
 
 		if (column.type === 'currency') {
-			return new Intl.NumberFormat(locale, {
-				style: 'currency',
-				currency: 'EUR'
-			}).format(value);
+			return readableNumber(Number(value), locale);
 		}
 
 		return (
@@ -79,22 +77,20 @@ function TableCell<T extends { id: number }>({ columnId, column, row }: TableCel
 					WebkitBoxOrient: 'vertical'
 				}}
 			>
-				{value.toString()}
+				{column.type === 'jsx' ? value : value.toString()}
 			</Box>
 		);
 	};
 
 	return (
-		<MuiTableCell key={`${columnId as string}${row.id}`} align={column.alignment}>
-			<Box
-				sx={{
-					display: 'flex',
-					alignItems: 'center',
-					color: 'text.primary'
-				}}
-			>
-				{renderValue()}
-			</Box>
+		<MuiTableCell
+			key={`${columnId as string}${row.id}`}
+			align={column.alignment}
+			sx={{
+				color: 'text.primary'
+			}}
+		>
+			{renderValue()}
 		</MuiTableCell>
 	);
 }
@@ -174,6 +170,7 @@ export function Table<T extends { id: number }>({
 	actions,
 	order,
 	orderBy,
+	size,
 	setOrder,
 	setOrderBy,
 	onExpand
@@ -243,7 +240,7 @@ export function Table<T extends { id: number }>({
 
 	return (
 		<TableContainer>
-			<MuiTable sx={{ minWidth: 650 }} aria-labelledby="members-table">
+			<MuiTable sx={{ minWidth: 650 }} size={size} aria-labelledby="members-table">
 				<TableHead<T>
 					numSelected={selectedRows?.length ?? 0}
 					order={order ?? 'asc'}
