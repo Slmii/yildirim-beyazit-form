@@ -196,7 +196,7 @@ export const Members = () => {
 				member={paymentsMember}
 			/>
 			<Snackbar
-				open={deleteManyIsSuccess || deleteManyIsError}
+				open={deleteManyIsSuccess}
 				autoHideDuration={5000}
 				onClose={deleteManyReset}
 				anchorOrigin={{
@@ -206,7 +206,7 @@ export const Members = () => {
 			>
 				<Alert
 					onClose={deleteManyReset}
-					severity={deleteManyIsSuccess ? 'success' : 'error'}
+					severity="success"
 					sx={{
 						display: 'flex',
 						alignItems: 'center',
@@ -216,7 +216,31 @@ export const Members = () => {
 						border: theme => `1px solid ${theme.palette.success.dark}`
 					}}
 				>
-					{deleteManyIsError ? deleteManyError.message : 'Successvol verwijderd!'}
+					Successvol verwijderd!
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				open={deleteManyIsError}
+				autoHideDuration={5000}
+				onClose={deleteManyReset}
+				anchorOrigin={{
+					vertical: 'top',
+					horizontal: 'right'
+				}}
+			>
+				<Alert
+					onClose={deleteManyReset}
+					severity="error"
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						minWidth: '100%',
+						height: 50,
+						fontSize: 16,
+						border: theme => `1px solid ${theme.palette.error.dark}`
+					}}
+				>
+					{deleteManyError?.message}
 				</Alert>
 			</Snackbar>
 		</>
