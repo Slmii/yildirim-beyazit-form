@@ -15,10 +15,10 @@ export const LanguageSwitcher = () => {
 				<Button
 					key={language.code}
 					variant="outlined"
-					onClick={() => handleChange('nl')}
-					startImage="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/510px-Flag_of_the_Netherlands.svg.png"
+					onClick={() => handleChange(language.code)}
+					startImage={language.icon}
 				>
-					Nederlands
+					{language.name}
 				</Button>
 			))}
 		</ButtonsGroup>
