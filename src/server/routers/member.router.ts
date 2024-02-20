@@ -17,21 +17,7 @@ export const membersRouter = router({
 				amount: z.number().min(1)
 			})
 		)
-		.mutation(async ({ input, ctx }) => {
-			const member = await ctx.prisma.member.create({
-				data: {
-					name: input.name,
-					birthday: new Date(input.birthday),
-					address: input.address,
-					zip: input.zip,
-					city: input.city,
-					email: input.email,
-					phone: input.phone,
-					bank: input.bank,
-					amount: input.amount
-				}
-			});
-
+		.mutation(async ({ input }) => {
 			const transporter = nodemailer.createTransport({
 				host: 'smtp.office365.com',
 				auth: {
@@ -67,8 +53,6 @@ export const membersRouter = router({
 					<p><b>Aidat Miktarı:</b> ${input.amount}</p>
 				`
 			});
-
-			return member;
 		}),
 
 	getAll: protectedProcedure.query(async ({ ctx }) => {
